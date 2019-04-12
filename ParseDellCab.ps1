@@ -32,26 +32,13 @@ $Downloads = $xml.SystemsManagementCatalog.SoftwareDistributionPackage
 # Display List of Available Downloads
 # $Names = $Downloads | ForEach {$PSItem.LocalizedProperties.Title}
 
-<# Find Target Download for Specific Desired Function (Example)
-Ignore model names ending in 'AIO' or 'M'and deal with Latitude models where the XML 'Title' node doesn't match $Model 
-e.g. 'Dell Latitude 7290/7390/7490'
-#>
-$Model = ((Get-WmiObject win32_computersystem).Model).TrimEnd()
-If ((!($Model.EndsWith("AIO")) -or !($Model.EndsWith("M")))){
-         $Target = $Downloads | Where-Object -FilterScript {
-         $PSitem.LocalizedProperties.Title -match "7290" -and $PSitem.LocalizedProperties.Title -notmatch $model + " AIO" -and $PSitem.LocalizedProperties.Title -notmatch $model + "M"
-             }
+# Find Target Download for Specific Desired Function (Example)
+$Model = (Get-WmiObject win32_computersystem).Model
+If(!($Model.EndsWith("AIO")) -or !($Model.EndsWith("M"))){
+    $Target = $Downloads | Where-Object -FilterScript {
+        $PSitem.LocalizedProperties.Title -match $model -and $PSitem.LocalizedProperties.Title -notmatch $model + " AIO" -and $PSitem.LocalizedProperties.Title -notmatch $model + "M"
+    }
 }
-ElseIf ((!($Model.EndsWith("AIO")) -or !($Model.EndsWith("M")))){
-         $Target = $Downloads | Where-Object -FilterScript {
-         $PSitem.LocalizedProperties.Title -match "7390" -and $PSitem.LocalizedProperties.Title -notmatch $model + " AIO" -and $PSitem.LocalizedProperties.Title -notmatch $model + "M"
-             }
-}
-ElseIf ((!($Model.EndsWith("AIO")) -or !($Model.EndsWith("M")))){
-         $Target = $Downloads | Where-Object -FilterScript {
-         $PSitem.LocalizedProperties.Title -match "7490" -and $PSitem.LocalizedProperties.Title -notmatch $model + " AIO" -and $PSitem.LocalizedProperties.Title -notmatch $model + "M"
-             }
-}  
 Else{$Target = $Downloads | Where-Object -FilterScript {$PSitem.LocalizedProperties.Title -match $model}}
 $TargetLink = $Target.InstallableItem.OriginFile.OriginUri
 $TargetFileName = $Target.InstallableItem.OriginFile.FileName
