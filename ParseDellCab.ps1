@@ -37,13 +37,11 @@ Ignore model names ending in 'AIO' or 'M'and deal with Latitude models where the
 e.g. 'Dell Latitude 7290/7390/7490'
 #>
 $Model = ((Get-WmiObject win32_computersystem).Model).TrimEnd()
-$Model = ((Get-WmiObject win32_computersystem).Model).TrimEnd()
 If  (((($Model -match '7290') -or ($Model -match '7390') -or ($Model -match '7490')) -and (!($Model.EndsWith("AIO")) -or !($Model.EndsWith("M"))))){
          $Target = $Downloads | Where-Object -FilterScript {
          $PSitem.LocalizedProperties.Title -match '7290/7390/7490' -and $PSitem.LocalizedProperties.Title -notmatch $model + " AIO" -and $PSitem.LocalizedProperties.Title -notmatch $model + "M"
              }
 }
-
 ElseIf  (((($Model -match '7280') -or ($Model -match '7380') -or ($Model -match '7480')) -and (!($Model.EndsWith("AIO")) -or !($Model.EndsWith("M"))))){
          $Target = $Downloads | Where-Object -FilterScript {
          $PSitem.LocalizedProperties.Title -match '7280/7380/7480' -and $PSitem.LocalizedProperties.Title -notmatch $model + " AIO" -and $PSitem.LocalizedProperties.Title -notmatch $model + "M"
